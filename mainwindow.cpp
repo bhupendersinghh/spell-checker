@@ -9,6 +9,7 @@
 #include<QStringList>
 #include<QCoreApplication>
 #include<QTextStream>
+#include<QDebug>
 class node{
     public:
         char info;
@@ -91,6 +92,29 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void searchBrute(QStringList wordList, QString word) {
+    for(const auto it : wordList) {
+        if(it == word) {
+            break;
+        }
+    }
+}
+
+QString timeTaken(node * root, QStringList wordList, QString word, std::string toSearch) {
+    auto startTrie = std::chrono::steady_clock::now();
+    findword(toSearch, 0, root);
+    auto endTrie = std::chrono::steady_clock::now();
+    auto durationTrie = std::chrono::duration_cast<std::chrono::microseconds>(endTrie - startTrie);
+    QString out("Time Taken using Trie: ");
+    out.append(QString::number(durationTrie.count())).append(" microseconds\n");
+    auto hello = std::chrono::steady_clock::now();
+    searchBrute(wordList, word);
+    auto stop = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - hello);
+    out.append("Time Taken using BruteForce Method: ");
+    out.append(QString::number(duration.count())).append(" microseconds\n");
+    return out;
+}
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -100,26 +124,31 @@ void MainWindow::on_pushButton_clicked()
     QFile words("C:\\Users\\Bhupender\\Desktop\\Practice\\applications\\untitled\\wordlist.txt");
     words.open(QIODevice::ReadOnly);
     QString content = words.readAll();
-    QStringList wordList = content.split(" ");
+    QStringList wordList = content.split("\r\n");
     words.close();
     for(const auto &wordAdd : wordList) {
         std::string toAdd = wordAdd.toLocal8Bit().constData();
         insertword(toAdd, 0, root);
     }
     if(findword(toSearch, 0, root) == true) {
-        QMessageBox::information(this, "Search", "Word Found!");
+        QString str = "Word found! \n";
+        str.append(timeTaken(root, wordList, word, toSearch));
+        QMessageBox::information(this, "Search", str);
     }
     else {
         suggest(toSearch, 0, root);
         int j = 0;
-        std::string toprint = "Possible suggestions are: ";
+        std::string toprint = "Word not found ! \nPossible suggestions are: ";
         while(suggestions[j] != "\0") {
             toprint += suggestions[j];
             toprint += ", ";
             j++;
         }
         toprint = toprint.substr(0, toprint.length() - 2);
-        QMessageBox::information(this, "Search", QString::fromStdString(toprint));
+        toprint += "\n";
+        QString str = "";
+        str.append(QString::fromStdString(toprint)).append(timeTaken(root, wordList, word, toSearch));
+        QMessageBox::information(this, "Search", str);
         clearAndReset();
     }
 }

@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>511</width>
-    <height>256</height>
+    <width>523</width>
+    <height>279</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Spell Checker by Aditi Singh</string>
+   <string>Spell Checker by Bhupender Singh</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="enabled">
@@ -56,7 +56,7 @@
      <string>Spell Checker</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -96,7 +96,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>511</width>
+     <width>523</width>
      <height>26</height>
     </rect>
    </property>
