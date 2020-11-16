@@ -3,6 +3,7 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include<unordered_map>
 #include<cstdlib>
 #include<QMessageBox>
 #include<QFile>
@@ -116,19 +117,32 @@ QString timeTaken(node * root, QStringList wordList, QString word, std::string t
     return out;
 }
 
+node *root = new node;
+std::unordered_map<std::string, std::string> dictionary;
+
 void MainWindow::on_pushButton_clicked()
 {
     QString word = ui->lineEditWord->text();
     std::string toSearch = word.toLocal8Bit().constData();
-    node *root = new node;
     QFile words("C:\\Users\\Bhupender\\Desktop\\Practice\\applications\\untitled\\wordlist.txt");
     words.open(QIODevice::ReadOnly);
     QString content = words.readAll();
     QStringList wordList = content.split("\r\n");
     words.close();
+    bool a = true;
+    std::string lastWord = "";
     for(const auto &wordAdd : wordList) {
         std::string toAdd = wordAdd.toLocal8Bit().constData();
-        insertword(toAdd, 0, root);
+        if(a) {
+            insertword(toAdd, 0, root);
+            lastWord = toAdd;
+            a = false;
+        }
+        else {
+            dictionary[lastWord] = toAdd;
+            a = true;
+
+        }
     }
     if(findword(toSearch, 0, root) == true) {
         QString str = "Word found! \n";
@@ -148,6 +162,35 @@ void MainWindow::on_pushButton_clicked()
         toprint += "\n";
         QString str = "";
         str.append(QString::fromStdString(toprint)).append(timeTaken(root, wordList, word, toSearch));
+        QMessageBox::information(this, "Search", str);
+        clearAndReset();
+    }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QString word = ui->lineEditWord->text();
+    std::string toSearch = word.toLocal8Bit().constData();
+    if(findword(toSearch, 0, root) == true) {
+        QString toDisplay = "The meaning of word '";
+        toDisplay.append(word);
+        toDisplay.append("' is '");
+        toDisplay.append(QString::fromStdString(dictionary[toSearch])).append("'");
+        QMessageBox::information(this, "Meaning", toDisplay);
+    }
+    else {
+        suggest(toSearch, 0, root);
+        int j = 0;
+        std::string toprint = "Word not found ! \nPossible suggestions are: ";
+        while(suggestions[j] != "\0") {
+            toprint += suggestions[j];
+            toprint += ", ";
+            j++;
+        }
+        toprint = toprint.substr(0, toprint.length() - 2);
+        toprint += "\n";
+        QString str = "";
+        str.append(QString::fromStdString(toprint));
         QMessageBox::information(this, "Search", str);
         clearAndReset();
     }
