@@ -141,7 +141,6 @@ void MainWindow::on_pushButton_clicked()
         else {
             dictionary[lastWord] = toAdd;
             a = true;
-
         }
     }
     if(findword(toSearch, 0, root) == true) {
@@ -167,8 +166,7 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
+void MainWindow::on_pushButton_2_clicked() {
     QString word = ui->lineEditWord->text();
     std::string toSearch = word.toLocal8Bit().constData();
     if(findword(toSearch, 0, root) == true) {
