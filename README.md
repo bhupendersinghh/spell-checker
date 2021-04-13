@@ -1,6 +1,7 @@
-# Spell Checker
+# Spell Checker and Dictionary
 
-This is a simple spell check application implementing the concept of tries. Words have been added using WordList.txt
+This is a simple spell check application implementing the concept of tries. The txt file contains words and their meanings. 
+Screenshots for dictionary functionality haven't been added but it works.
 Please modify the path of text file in the cpp file.
 Install Qt Creator to run
 [![HitCount](http://hits.dwyl.com/bhupendersinghh/spell-checker.svg)](http://hits.dwyl.com/bhupendersinghh/spell-checker)
